@@ -23,25 +23,43 @@
                     <el-input type="password" v-model="loginData.password" />
                 </el-form-item>
             </el-form>
-            <el-button type="primary" class="login_btn">登录</el-button>
+            <el-button type="primary" class="login_btn" @click="handleLogin">登录</el-button>
+            <p>{{ num }}</p>
         </div>
     </div>
 </template>
 
 <script>
 import { reactive, toRefs } from 'vue';
-
+import { Store, useStore } from 'vuex'
 export default {
     name: "login",
     setup() {
+        const store = useStore()
+        const count = store.state.number.count
         const data = reactive({
             loginData: {
                 username: "",
                 password: "",
-            }
+            },
+            num: count,
+            
+            
         })
+        console.log('修改前getters',store.getters["number/countStatus"]);
+        const handleLogin = () => {
+            store.dispatch('number/setCountPromise', -100)
+                .then((res) => {
+                    alert('修改成功')
+                }).catch(err => {
+                    alert(err)
+                })
+            console.log(store.state.number.count);
+            console.log('修改后getters',store.getters["number/countStatus"]);
+        }
         return {
-            ...toRefs(data)
+            ...toRefs(data),
+            handleLogin
 
         }
     }
