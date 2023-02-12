@@ -8,7 +8,7 @@
                     <img class="logo" src="../../assets/logo.png" alt="">
                     <h1 class="title">商铺后台管理系统</h1>
                 </div>
-                <el-button type="danger">退出</el-button>
+                <el-button @click="loginOut" type="danger">退出</el-button>
 
             </el-header>
             <el-container>
@@ -58,17 +58,24 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from "vue-router"
 
 export default {
     name: 'layout',
     setup() {
-        const state = reactive({
-            count: 0,
-        })
+        const store = useStore()
+        const router = useRouter()
+        const loginOut = () => {
+            localStorage.removeItem("loginData")
+            this.$store.commit('setUserInfo',{})
+            router.push({
+                path:'/login'
+            })
+        }
 
         return {
-            ...toRefs(state),
+            loginOut
         }
     }
 }

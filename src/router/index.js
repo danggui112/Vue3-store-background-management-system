@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 // 初始化进入项目就引用
 import layout from '../views/LayOut/LayOut.vue'
-
+import store from '../store/index.js'
 
 const routes = [
   //登录页面
@@ -46,6 +46,24 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+router.beforeEach((to, from, next) => {
+  // to 从哪个页面 from 到哪个 只有执行next()才会跳转
+
+  // 判断用户是否登录
+  console.log("store", store.state.uInfo);
+  const uInfo = store.state.uInfo.userInfo
+  if (!uInfo.username) {
+    //未登录 跳转到  
+    if (to.path === "/login") {
+      next()
+      return
+    }
+    next("/login")
+  } else {
+    next()
+  }
+
 })
 
 export default router
